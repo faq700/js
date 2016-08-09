@@ -28,38 +28,48 @@ function Matrix (matrixId, rows, colls){
 		}
 	}
 
-	this.setCell=function (row, coll, val){
+	this.findCell=function(snake){
+		// определяет порядковый номер ячейки
+		var index;
+		var cell=[];
+		for(index=0; index<snake.length; ++index){
+			cell[index]=snake[index][0]*20+snake[index][1];
+		}
+		return cell;
+	}
+
+	this.setCell=function (snake, val){
 		// функция принимает координаты ячейки
 		// если val == true, закрашивает ячейку,
 		// иначе убирает закраску.
-
-		var cell=this.findCell(row, coll);
+		var cell=this.findCell(snake);
+		var index;
 		if (val){
-			document.getElementById(this.matrixId).children[cell].className='cell on';
+			for (index=0; index<cell.length; ++index){
+				$('#matrix div').eq(cell[index]).addClass(' on');
+			}
 		}else{
-			document.getElementById(this.matrixId).children[cell].className='cell';
+			$('#matrix div').eq(cell).removeClass(' on');
 		}
-	}
-
-	this.findCell=function(row, coll){
-		// определяет порядковый номер ячейки
-		var cell= (row-1)*this.colls+(coll-1);
-		return cell;
 	}
 
 }
 
-function Snakes(row, coll, cours){
-	this.body=[row, coll];
+function Snakes(sn, cours){
+	this.snake=sn;
 	this.cours=cours;
 	var that=this;
 
 	this.move=function(){
-	var res=that.findCell(that.body[0], that.body[1]);
-	var last_body=that.body.slice();
+	var last_snake=that.snake.slice();
+	var sn=[];
 	switch (that.cours){
 			case 'down':
-				that.body[0]++;
+				sn=that.snake.pop();
+					that.snake.push(sn);
+					sn[0]++;
+					that.snake.push(sn);
+				that.snake.shift();
 				break;
 			case 'right':
 				that.body[1]++;
@@ -71,12 +81,12 @@ function Snakes(row, coll, cours){
 				that.body[0]--;
 				break;
 		}
-	if(that.body[0]==21 || that.body[0]==0 || that.body[1]==0 || that.body[1]==21){
+	if(that.snake[that.snake.length-1][0]==20 || that.snake[that.snake.length-1][0]==-1 || that.snake[that.snake.length-1][1]==-1 || that.snake[that.snake.length-1][1]==20){
 		alert('Game Over');
 		location.reload();
 	}
-	that.setCell(last_body[0], last_body[1], false);
-	that.setCell(that.body[0], that.body[1], true);
+	that.setCell(last_snake, false);
+	that.setCell(that.snake, true);
 	}
 	
 	
@@ -97,19 +107,26 @@ function Snakes(row, coll, cours){
 		}
 	}
 	
-	this.findCell=function(row, coll){
+	this.findCell=function(snake){
 		// определяет порядковый номер ячейки
-		var cell=(row-1)*20+(coll-1);
+		var index;
+		var cell=[];
+		for(index=0; index<snake.length; ++index){
+			cell[index]=snake[index][0]*20+snake[index][1];
+		}
 		return cell;
 	}
 	
-	this.setCell=function (row, coll, val){
+	this.setCell=function (snake, val){
 		// функция принимает координаты ячейки
 		// если val == true, закрашивает ячейку,
 		// иначе убирает закраску.
-		var cell=that.findCell(row, coll);
+		var cell=that.findCell(snake);
+		var index;
 		if (val){
-			$('#matrix div').eq(cell).addClass(' on');
+			for (index=0; index<cell.length; ++index){
+				$('#matrix div').eq(cell[index]).addClass(' on');
+			}
 		}else{
 			$('#matrix div').eq(cell).removeClass(' on');
 		}
@@ -121,14 +138,13 @@ function Snakes(row, coll, cours){
 //
 window.onload = function()
 {
-	var row=1;
-	var coll=2;
 	var cours='down';
+	var sn=[[0,1], [1,1]];
 	var m1=new Matrix('matrix', 20, 20);
 	m1.create();
-	m1.setCell(row, coll, true);
-	var Snake= new Snakes(1, 2, 'down');
-	setInterval(Snake.move, 500);
+	m1.setCell(sn, true);
+	var Snake= new Snakes(sn, cours);
+	setInterval(Snake.move, 1000);
 	$(document).keydown(function(event){
 		if (event.which==PUSH.RIGHT || event.which==PUSH.LEFT || event.which==PUSH.UP || event.which==PUSH.DOWN){
 			var ev= event.which;
