@@ -59,17 +59,15 @@ function Snakes(sn, cours){
 	this.snake=sn;
 	this.cours=cours;
 	var that=this;
-
-	this.move=function(){
-	var last_snake=that.snake.slice();
+	var last_snake=[];
 	var sn=[];
+	this.move=function(){
 	switch (that.cours){
-			case 'down':
-				sn=that.snake.pop();
-					that.snake.push(sn);
-					sn[0]++;
-					that.snake.push(sn);
-				that.snake.shift();
+		case 'down':
+				last_snake=that.snake.shift();
+				sn=that.snake[that.snake.length-1].slice();
+				sn[0]++;
+				that.snake.push(sn);
 				break;
 			case 'right':
 				that.body[1]++;
@@ -81,10 +79,12 @@ function Snakes(sn, cours){
 				that.body[0]--;
 				break;
 		}
-	if(that.snake[that.snake.length-1][0]==20 || that.snake[that.snake.length-1][0]==-1 || that.snake[that.snake.length-1][1]==-1 || that.snake[that.snake.length-1][1]==20){
+	/*if(that.snake[that.snake.length-2][0]==20 || that.snake[that.snake.length-2][0]==-1 || that.snake[that.snake.length-2][1]==-1 || that.snake[that.snake.length-2][1]==20){
 		alert('Game Over');
 		location.reload();
-	}
+	}*/
+	alert(last_snake);
+		alert(that.snake);
 	that.setCell(last_snake, false);
 	that.setCell(that.snake, true);
 	}
@@ -112,6 +112,7 @@ function Snakes(sn, cours){
 		var index;
 		var cell=[];
 		for(index=0; index<snake.length; ++index){
+			//alert(snake);
 			cell[index]=snake[index][0]*20+snake[index][1];
 		}
 		return cell;
@@ -122,13 +123,16 @@ function Snakes(sn, cours){
 		// если val == true, закрашивает ячейку,
 		// иначе убирает закраску.
 		var cell=that.findCell(snake);
+		alert(cell);
 		var index;
 		if (val){
 			for (index=0; index<cell.length; ++index){
 				$('#matrix div').eq(cell[index]).addClass(' on');
 			}
 		}else{
-			$('#matrix div').eq(cell).removeClass(' on');
+			for (index=0; index<cell.length; ++index){
+				$('#matrix div').eq(cell[index]).removeClass().addClass('cell');
+			}
 		}
 	}
 }
@@ -139,12 +143,12 @@ function Snakes(sn, cours){
 window.onload = function()
 {
 	var cours='down';
-	var sn=[[0,1], [1,1]];
+	var sn=[[0, 1], [1, 1], [2, 1]];
 	var m1=new Matrix('matrix', 20, 20);
 	m1.create();
 	m1.setCell(sn, true);
 	var Snake= new Snakes(sn, cours);
-	setInterval(Snake.move, 1000);
+	setInterval(Snake.move, 4000);
 	$(document).keydown(function(event){
 		if (event.which==PUSH.RIGHT || event.which==PUSH.LEFT || event.which==PUSH.UP || event.which==PUSH.DOWN){
 			var ev= event.which;
