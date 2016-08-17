@@ -61,31 +61,66 @@ function Snakes(sn, cours){
 	var that=this;
 	var last_snake=[];
 	var sn=[];
+	var sn2=[];
+	var cell;
+	var res;
 	this.move=function(){
 	switch (that.cours){
 		case 'down':
 				last_snake=that.snake.shift();
 				sn=that.snake[that.snake.length-1].slice();
 				sn[0]++;
-				that.snake.push(sn);
+				cell=that.findCell(sn);
+			    that.snake.push(sn);
+				res=$('#matrix div').eq(cell).attr('class');
+				if(res=='cell fr'){
+					sn2=sn.slice();
+					sn2[0]++;
+					that.snake.push(sn2);
+					that.fruts_dell();
+				}
 				break;
 			case 'right':
 				last_snake=that.snake.shift();
 				sn=that.snake[that.snake.length-1].slice();
 				sn[1]++;
+				cell=that.findCell(sn);
 				that.snake.push(sn);
+				res=$('#matrix div').eq(cell).attr('class');
+				if(res=='cell fr'){
+					sn2=sn.slice();
+					sn2[1]++;
+					that.snake.push(sn2);
+					that.fruts_dell();
+				}
 				break;
 			case 'left':
 				last_snake=that.snake.shift();
 				sn=that.snake[that.snake.length-1].slice();
 				sn[1]--;
+				cell=that.findCell(sn);
 				that.snake.push(sn);
+				res=$('#matrix div').eq(cell).attr('class');
+				if(res=='cell fr'){
+					sn2=sn.slice();
+					sn2[1]--;
+					that.snake.push(sn2);
+					that.fruts_dell();
+				}
 				break;
 			case 'up':
 				last_snake=that.snake.shift();
 				sn=that.snake[that.snake.length-1].slice();
 				sn[0]--;
+				cell=that.findCell(sn);
 				that.snake.push(sn);
+				res=$('#matrix div').eq(cell).attr('class');
+				if(res=='cell fr'){
+					sn2=sn.slice();
+					sn2[0]--;
+					that.snake.push(sn2);
+					that.fruts_dell();
+				}
 				break;
 		}
 	if(that.snake[that.snake.length-1][0]==20 || that.snake[that.snake.length-1][0]==-1 || that.snake[that.snake.length-1][1]==-1 || that.snake[that.snake.length-1][1]==20){
@@ -100,12 +135,6 @@ function Snakes(sn, cours){
 	}
 
 	this.crash=function(){
-		var a=[[1,1],[2,2]];
-		var b = [2,2];
-		alert(a[1]);
-		if (a[1]==b){
-			alert('fg');
-		}
 		var index;
 		var crash_arr=[];
 		var crash=[];
@@ -115,11 +144,26 @@ function Snakes(sn, cours){
 		sn=crash_arr.length;
 		for (index=0; index<sn; index++){
 			for(var i=0; i<crash_arr.length; i++){
-				if(crash_arr[i]==crash){
-					alert('bf0');
+					crash=crash_arr.shift();
+				for(var j=0; j<crash_arr.length; j++){
+					if(crash_arr[j].join(" ")==crash.join(" ")){
+						alert('Game Over');
+						location.reload();
+					}
 				}
 			}
 		}
+	}
+	
+	this.fruts=function(){
+		var res;
+		res=Math.floor(Math.random() * 400);
+		$('#matrix div').eq(res).addClass(' fr');
+		return res;
+	}
+	
+	this.fruts_dell=function(){
+		$('.fr').removeClass().addClass('cell');
 	}
 	
 	
@@ -186,12 +230,15 @@ function Snakes(sn, cours){
 window.onload = function()
 {
 	var cours='down';
-	var sn=[[0, 1], [1, 1], [2, 1], [3, 1], [1, 1]];
+	var sn=[[0, 1], [1, 1], [2, 1], [3, 1], [4, 1]];
 	var m1=new Matrix('matrix', 20, 20);
 	m1.create();
 	m1.setCell(sn, true);
 	var Snake= new Snakes(sn, cours);
-	setInterval(Snake.move, 4000);
+	setInterval(Snake.move, 200);
+	Snake.fruts();
+	var res=setInterval(Snake.fruts, 2500);
+	setInterval(Snake.fruts_dell, 15000);
 	$(document).keydown(function(event){
 		if (event.which==PUSH.RIGHT || event.which==PUSH.LEFT || event.which==PUSH.UP || event.which==PUSH.DOWN){
 			var ev= event.which;
