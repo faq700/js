@@ -120,6 +120,17 @@ function Snakes(sn, cours){
 		}
 	}
 	
+	this.fruts=function(){
+		var res;
+		res=Math.floor(Math.random() * 400);
+		$('#matrix div').eq(res).addClass(' fr');
+		return res;
+	}
+	
+	this.fruts_dell=function(){
+		$('.fr').removeClass().addClass('cell');
+	}
+	
 	
 	this.navigation=function(ev){
 		switch (ev){
@@ -190,6 +201,8 @@ window.onload = function()
 	m1.setCell(sn, true);
 	var Snake= new Snakes(sn, cours);
 	setInterval(Snake.move, 400);
+	var res=setInterval(Snake.fruts, 3000);
+	setInterval(Snake.fruts_dell, 2800);
 	$(document).keydown(function(event){
 		if (event.which==PUSH.RIGHT || event.which==PUSH.LEFT || event.which==PUSH.UP || event.which==PUSH.DOWN){
 			var ev= event.which;
