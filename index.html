@@ -4,12 +4,29 @@
     <title>GAME</title>
     <link rel="stylesheet" href="style.css" type="text/css" media="screen">
     <script language="JavaScript" src="../jquery-3.1.0.js"></script>
+    <script language="JavaScript" src="https://yastatic.net/jquery-ui/1.11.2/jquery-ui.min.js"></script>
     <script language="javascript" src="../script.js"></script>
 </head>
 <body>
 
-<div id="bg"><p id="pp" class="sms">привет</p></div>
+<div id="dialog">
+    <form>
+        <input type="text" value="name">
+        <input type="text" value="surname">
+        <input type="button" value="sent">
+    </form>
 
-<div id="matrix"></div>
+</div>
+
+<div id="men">
+    <ul id="menu">
+        <li><span class="ui-icon ui-icon-disk"></span>ferst</li>
+        <li><span class="ui-icon ui-icon-disk"></span>second</li>
+        <li><span class="ui-icon ui-icon-disk"></span>three </li>
+    </ul>
+</div>
+
+<button id="opener">Open dialog</button>
+
 </body>
 </html>
